@@ -20,10 +20,10 @@ The above example is the default behavior you can configure it with `MrF::Projec
 
 ```ruby
 MrF::Project.configure do |project|
-	project.project_root = Rails.root
-	project.gpg_passphrase = '1234' # default is to ask you for it with the console
-	project.files = { "config/app.production.yml.gpg" => 'config/app.yml' }
-	project.env = 'sandbox' # default is to use MRF_ENV or RAILS_ENV
+  project.project_root = Rails.root
+  project.gpg_passphrase = '1234' # default is to ask you for it with the console
+  project.files = { "config/app.production.yml.gpg" => 'config/app.yml' }
+  project.env = 'sandbox' # default is to use MRF_ENV or RAILS_ENV
 end
 ```
 
