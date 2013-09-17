@@ -10,13 +10,13 @@ A libary for uploading gpg secrets with capistrano.
 require 'mrf/capistrano'
 
 after "deploy", "mrf:upload_secrets"
-# This will upload config/app.production.yml.gpg to config/app.yml on your server
-# or if you have some other deploy env
 ```
+This will upload config/app.production.yml.gpg to config/app.yml on your server
+or if you have some other deploy env
 
 ## Configuration
 
-The above example is the default behavior you can configure it with `MrF::Project.configure`
+The above example is the default behavior but you can configure it with `MrF::Project.configure`
 
 ```ruby
 MrF::Project.configure do |project|
