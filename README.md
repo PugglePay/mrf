@@ -26,3 +26,11 @@ MrF::Project.configure do |project|
 	project.env = 'sandbox' # default is to use MRF_ENV or RAILS_ENV
 end
 ```
+
+## Running the specs
+
+```shell
+bundle install # install deps
+./scripts/import_test_keys
+rake # runs the tests
+```

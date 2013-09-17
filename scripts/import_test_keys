@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "Importing tests keys"
+gpg --import spec/fixtures/tobias.public.key
+gpg --import spec/fixtures/tobias.secret.key
