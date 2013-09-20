@@ -4,8 +4,8 @@ module MrF
 
     attr_accessor :project_root
     attr_accessor :gpg_passphrase
-    attr_writer :files
     attr_writer :env
+    attr_writer :secrets_path
 
     def configure
       yield self
@@ -15,18 +15,20 @@ module MrF
       @env || ENV['MRF_ENV'] || ENV['RAILS_ENV'] || 'production'
     end
 
-    def files
-      @files || { "config/app.#{env}.yml.gpg" => 'config/app.yml' }
+    def secrets_path
+      @sercrets_path || "config/secrets.#{env}.yml.gpg"
     end
 
-    def file_io_secrets
-      files.map do |local_path, server_path|
-        keyring = Keyring.new(
-          path: File.join(root_path, local_path),
-          gpg_passphrase: gpg_passphrase
-        )
+    def unpack_secrets
+      keyring = Keyring.new(
+        path: File.join(root_path, secrets_path),
+        gpg_passphrase: gpg_passphrase
+      )
 
-        { path: server_path, io: StringIO.new(YAML.dump(keyring.data)) }
+      keyring.data.reduce({}) do |acc, (filename, data)|
+        filepath = File.join(File.dirname(secrets_path), filename)
+        content = StringIO.new(YAML.dump(data))
+        acc.merge(filepath => content)
       end
     end
 

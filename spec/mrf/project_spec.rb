@@ -2,14 +2,29 @@ require 'spec_helper'
 
 module MrF
   describe Project do
-    it 'can get secrets from a project' do
-      Project.project_root = fixture_path('.')
-      Project.gpg_passphrase = '1234'
+    before do
+      Project.configure do |p|
+        p.project_root = fixture_path('.')
+        p.gpg_passphrase = '1234'
+      end
+    end
 
-      content = YAML.load(Project.file_io_secrets.first[:io].string)
-      expect(content).to eq("production" => {
-        "database-password" => 'password1'
-      })
+    it "can unpack secrets" do
+      files = Project.unpack_secrets
+
+      expect(YAML.load(files["config/database.yml"].string)).
+        to eq("production" => {"host" => "some_host"})
+
+      expect(YAML.load(files["config/app.yml"].string)).
+        to eq("production" => {"password" => "some_password"})
+    end
+
+    it "can unpack secrets in diferent env" do
+      Project.env = "sandbox"
+      files = Project.unpack_secrets
+
+      expect(YAML.load(files["config/database.yml"].string)).
+        to eq("password" => "some_sandbox_password")
     end
   end
 end
