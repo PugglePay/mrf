@@ -4,6 +4,7 @@ require 'mrf/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "mrf"
+  spec.author           = 'PugglePay Dev'
   spec.version       = MrF::VERSION
   spec.summary       = "Rails Application Secrets With GPG"
   spec.description   = "Rails Application Secrets With GPG"
