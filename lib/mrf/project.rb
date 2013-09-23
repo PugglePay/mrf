@@ -1,41 +1,25 @@
+require 'yaml'
 module MrF
-  module Project
-    extend self
-
-    attr_accessor :project_root
+  class Project
     attr_accessor :gpg_passphrase
-    attr_writer :env
-    attr_writer :secrets_path
+    attr_accessor :secrets_path
 
-    def configure
-      yield self
-    end
-
-    def env
-      @env || ENV['MRF_ENV'] || ENV['RAILS_ENV'] || 'production'
-    end
-
-    def secrets_path
-      @sercrets_path || "config/secrets.#{env}.yml.gpg"
+    def initialize (opts={})
+      @secrets_path   = opts.fetch(:secrets_path)
+      @gpg_passphrase = opts.fetch(:gpg_passphrase, nil)
     end
 
     def unpack_secrets
+      raise "File not found: #{secrets_path}" unless File.exists?(secrets_path)
       keyring = Keyring.new(
-        path: File.join(root_path, secrets_path),
+        path: secrets_path,
         gpg_passphrase: gpg_passphrase
       )
 
       keyring.data.reduce({}) do |acc, (filename, data)|
-        filepath = File.join(File.dirname(secrets_path), filename)
         content = StringIO.new(YAML.dump(data))
-        acc.merge(filepath => content)
+        acc.merge(filename => content)
       end
-    end
-
-    private
-
-    def root_path
-      project_root || Rails.root
     end
   end
 end

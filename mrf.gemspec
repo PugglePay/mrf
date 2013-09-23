@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'mrf/version'
@@ -10,6 +11,7 @@ Gem::Specification.new do |spec|
   spec.description   = "Rails Application Secrets With GPG"
   spec.homepage      = "https://github.com/pugglepay/mrf"
   spec.license       = "MIT"
+  spec.authors       = ["Patrik Kårlin", "Jean-Louis Giordano", "Magnus Rex"]
   spec.email         = ["dev@pugglepay.com"]
 
   spec.files         = `git ls-files`.split($/)

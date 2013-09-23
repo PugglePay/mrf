@@ -3,28 +3,25 @@ require 'spec_helper'
 module MrF
   describe Project do
     before do
-      Project.configure do |p|
-        p.project_root = fixture_path('.')
-        p.gpg_passphrase = '1234'
-      end
+      @project = Project.new(
+        secrets_path: fixture_path("config/secrets.production.yml.gpg"),
+        gpg_passphrase: '1234'
+      )
     end
 
     it "can unpack secrets" do
-      files = Project.unpack_secrets
+      files = @project.unpack_secrets
 
-      expect(YAML.load(files["config/database.yml"].string)).
+      expect(YAML.load(files["database.yml"].string)).
         to eq("production" => {"host" => "some_host"})
 
-      expect(YAML.load(files["config/app.yml"].string)).
+      expect(YAML.load(files["app.yml"].string)).
         to eq("production" => {"password" => "some_password"})
     end
 
-    it "can unpack secrets in diferent env" do
-      Project.env = "sandbox"
-      files = Project.unpack_secrets
-
-      expect(YAML.load(files["config/database.yml"].string)).
-        to eq("password" => "some_sandbox_password")
+    it "raises error if file does not exist" do
+      @project.secrets_path = "not_found"
+      expect { @project.unpack_secrets }.to raise_error
     end
   end
 end

@@ -25,6 +25,7 @@ module MrF
     end
 
     def passfunc (obj, uid_hint, passphrase_info, prev_was_bad, fd)
+      # Use known passphrase when given
       if @gpg_passphrase
         io = IO.for_fd(fd, 'w')
         io.puts(@gpg_passphrase)
@@ -42,20 +43,21 @@ module MrF
         io = IO.for_fd(fd, 'w')
         io.puts(password)
         io.flush
-      else
-        begin
-          io = IO.for_fd(fd, 'w')
+        return
+      end
 
-          console = IO.console
-          console.write("Passphrase for #{uid_hint}: ")
-          console.noecho do |noecho|
-            io.puts(noecho.gets)
-            io.flush
-          end
-          console.puts
-        ensure
-          (0 ... $_.length).each do |i| $_[i] = ?0 end if $_
+      # Prompt user
+      begin
+        console = IO.console
+        console.write("Passphrase for #{uid_hint}: ")
+        console.noecho do |noecho|
+          io = IO.for_fd(fd, 'w')
+          io.puts(noecho.gets)
+          io.flush
         end
+        console.puts
+      ensure
+        (0 ... $_.length).each do |i| $_[i] = ?0 end if $_
       end
     end
 
