@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mrf (0.0.1)
+    mrf (0.0.2)
       capistrano
       gpgme
 

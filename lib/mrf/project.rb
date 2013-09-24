@@ -17,9 +17,13 @@ module MrF
       )
 
       keyring.data.reduce({}) do |acc, (filename, data)|
-        content = StringIO.new(YAML.dump(data))
+        content = StringIO.new(yaml_file?(filename) ? YAML.dump(data) : data)
         acc.merge(filename => content)
       end
+    end
+
+    def yaml_file? (path)
+      path =~ /\A.*\.yml\Z/
     end
   end
 end

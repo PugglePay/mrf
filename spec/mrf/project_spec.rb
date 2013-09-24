@@ -17,6 +17,9 @@ module MrF
 
       expect(YAML.load(files["app.yml"].string)).
         to eq("production" => {"password" => "some_password"})
+
+      expect(files["secret.key"].string).
+        to eq("two lines\nof information")
     end
 
     it "raises error if file does not exist" do
