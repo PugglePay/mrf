@@ -11,7 +11,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       MrF::Project.new(
         secrets_path: secret_path
       ).unpack_secrets.each do |filepath, content|
-        upload(content, File.join(config_dir, filepath))
+        upload(content, File.join(config_dir, filepath), mode: '0600')
       end
     end
   end
