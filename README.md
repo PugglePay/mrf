@@ -15,7 +15,8 @@ set :mrf_remote_config_dir, "myrelease/config"
 after "deploy", "mrf:upload_secrets"
 ```
 
-This will upload the files listed in secrets to your server (file mode 0600 by default)
+It will ask you for your gpg passphrase while deploying.
+And upload the files listed in secrets to your server (file mode 0600 by default)
 
 ## A Example secrets file
 
