@@ -13,13 +13,15 @@ module MrF
       expect(keyring.data).to eq('production' => { 'secret' => 'hello' })
     end
 
-    it "can retrive passphrase from console if no passphrase is given" do
+    it "can retrieve passphrase from console if no passphrase is given" do
+      io = double("IO")
       console = double("IO::Console")
       expect(console).to receive(:write).with(
         "Passphrase for EEF971D578000737 Tobias Funke (Mr F) <tobias@bluemangroup.org>: "
       )
       expect(console).to receive(:noecho).and_yield(double("FD", gets: "1234"))
-      expect(console).to receive(:puts)
+      expect(io).to receive(:puts)
+      expect(IO).to receive("for_fd").and_return(io)
       expect(IO).to receive("console").and_return(console)
 
       keyring = Keyring.new(path: fixture_path('app.yml.gpg'))

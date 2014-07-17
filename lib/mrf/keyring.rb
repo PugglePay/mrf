@@ -43,22 +43,24 @@ module MrF
         io = IO.for_fd(fd, 'w')
         io.puts(password)
         io.flush
-        return
+      else
+        # Prompt user
+        begin
+          io = IO.for_fd(fd, 'w')
+
+          console = IO.console
+          console.write("Passphrase for #{uid_hint}: ")
+          console.noecho do |noecho|
+            io.puts(noecho.gets)
+            io.flush
+          end
+          console.puts
+        ensure
+          (0 ... $_.length).each do |i| $_[i] = ?0 end if $_
+        end
       end
 
-      # Prompt user
-      begin
-        console = IO.console
-        console.write("Passphrase for #{uid_hint}: ")
-        console.noecho do |noecho|
-          io = IO.for_fd(fd, 'w')
-          io.puts(noecho.gets)
-          io.flush
-        end
-        console.puts
-      ensure
-        (0 ... $_.length).each do |i| $_[i] = ?0 end if $_
-      end
+      $stderr.puts
     end
 
     def crypto
