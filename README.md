@@ -2,21 +2,19 @@
 
 ## For british eyes only
 
-A libary for uploading gpg secrets with capistrano.
+A libary for handling GPG-encrypted secrets.
 
-put your secrets in a gpg encrypted file. Ex: `config/secrets.{{Rails.env}}.yml.gpg`
+Put your secrets in a gpg encrypted file. Ex: `config/secrets.yml.gpg`
 
-Then add mrf to you deploy script like this
+Then you can access them like this:
 
 ```ruby
-require 'mrf/capistrano'
-set :mrf_secrets_path, "myproject/config/secrets.#{rails env maybe?}.yml.gpg"
-set :mrf_remote_config_dir, "myrelease/config"
-after "deploy", "mrf:upload_secrets"
-```
+require 'mrf'
 
-It will ask you for your gpg passphrase while deploying.
-And upload the files listed in secrets to your server (file mode 0600 by default)
+secret_files = MrF::Project.new(
+  secrets_path: "config/secrets.yml.gpg"
+).unpack_secrets
+```
 
 ## A Example secrets file
 
